@@ -47,7 +47,8 @@ online_news <- online_data|>
   summarise(matched_stores = sum(matched_stories, na.rm = TRUE),
             all_candidate_stories = sum(all_candidate_stories, na.rm = TRUE),
             # calculate percentage of stories (online news) mentioned for each candidate
-            pct_stories = (matched_stores/all_candidate_stories)*100)|> 
+            pct_stories = (matched_stores/all_candidate_stories)*100,
+            .groups = 'drop')|> 
   arrange(desc(pct_stories))|> # arrange pct_stores in descending order
   select(name, week, pct_stories)
 ```
@@ -57,13 +58,14 @@ online_news <- online_data|>
 
 online_rank <- online_news|>
   group_by(week)|> # aggregate the data by week
-  arrange(week, desc(pct_stories))|> # arrange the data by week and by pct_stories in descending order
+  arrange(week, desc(pct_stories))|> # arrange by week and by pct_stories in descending order
   mutate(rank = rank(-pct_stories, ties.method = "first"))|> # rank by pct_stories for each candidate
   filter(rank %in% c(1, 2))|> # select the candidates with the top two highest pct_stories
   summarise(biden_pct_stories = first(pct_stories), # Joe Biden's pct_stories
             second_highest_pct_stories = last(pct_stories), # second highest pct_stories
             # ratio of Biden's pct_stories/ second rank's pct_stories
-            times_pct_stories = biden_pct_stories/second_highest_pct_stories) 
+            times_pct_stories = (biden_pct_stories/second_highest_pct_stories),
+            .groups = 'drop') 
 ```
 
 ### Data Wrangling: cable data - all candidates
@@ -79,7 +81,8 @@ cable_news <- cable_data|>
             all_candidate_clips = sum(all_candidate_clips, na.rm = TRUE),
             total_clips = sum(total_clips, na.rm = TRUE),
             # calculte percentage of clips (cable news) mentioned for each candidate
-            pct_clips = (matched_clips/all_candidate_clips)*100)|>
+            pct_clips = (matched_clips/all_candidate_clips)*100,
+            .groups = 'drop')|>
   arrange(desc(pct_clips))|> # arrange pct_clips in descening order
   select(name, week, pct_clips)
 ```
@@ -89,13 +92,14 @@ cable_news <- cable_data|>
 
 cable_rank <- cable_news|>
   group_by(week)|> # aggregate the data by week
-  arrange(week, desc(pct_clips))|> #arrange the data by week and the clip count in descening order
+  arrange(week, desc(pct_clips))|> # arrange by week and by pct_clips in descening order
   mutate(rank = rank(-pct_clips, ties.method = "first"))|> # rank the candidate by pct_clips 
   filter(rank %in% c(1, 2))|> # show only candidates with the top two highest pct_clips 
   summarise(biden_pct_clips = first(pct_clips),
             second_highest_pct_clips = last(pct_clips),
             # ratios of Biden's pct_clips/ second rank's pct_clips
-            times_pct_clips = biden_pct_clips/second_highest_pct_clips)
+            times_pct_clips = (biden_pct_clips/second_highest_pct_clips),
+            .groups = 'drop')
 ```
 
 ### Combine online_rank and cable_rank
