@@ -153,13 +153,13 @@ online_diff <- online_news|>
 # Combine the two datasets for the cable and the online news diff for each candidate
 table1 <- cable_diff|>
   full_join(online_diff, by = "name")|> # join the cable difference and online difference datasets
-  rename("CANDIDATE" = name,            # rename the column names
-         "10/13/19 CABLE" = `2019-10-13.x`,
-         "10/20/19 CABLE" = `2019-10-20.x`,
-         "DIFF CABLE" = `diff.x`,
-         "10/13/19 ONLINE" = `2019-10-13.y`,
-         "10/20/19 ONLINE" = `2019-10-20.y`,
-         "DIFF ONLINE" = `diff.y`)
+  rename("Candidate" = name,            # rename the column names
+         "10/13/19 Cable (%)" = `2019-10-13.x`,
+         "10/20/19 Cable (%)" = `2019-10-20.x`,
+         "Diff Cable (%)" = `diff.x`,
+         "10/13/19 Online (%)" = `2019-10-13.y`,
+         "10/20/19 Online (%)" = `2019-10-20.y`,
+         "Diff Online (%)" = `diff.y`)
 
 kable(table1)
 ```
