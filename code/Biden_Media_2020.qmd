@@ -1,0 +1,175 @@
+---
+title: "Biden_Media_2020"
+format: pdf
+editor: visual
+---
+
+### Introduction
+
+### Motivation and Reproducibility
+
+When you click the **Render** button a document will be generated that includes both content and the output of embedded code. You can embed code like this:
+
+```{r}
+1 + 1
+```
+
+### Set Up
+
+### Install Required Packages and Load Libraries
+
+```{r}
+#install.packages("dplyr")
+#install.packages("lubridate")
+#install.packages("ggplot2")
+#install.packages("tidyr")
+#install.packages("plotly")
+#install.packages("knitr")
+
+library(lubridate)
+library(dplyr)
+library(ggplot2)
+library(tidyr)
+library(plotly)
+library(knitr)
+```
+
+### Import Data
+
+```{r}
+online_data <- read.csv("../data/online_weekly.csv") # online news weekly data
+cable_data <- read.csv("../data/cable_weekly.csv") # cable news weekly data
+```
+
+### Data Wrangling: online data - all candidate
+
+```{r}
+online_news <- online_data|>
+  mutate(date = ymd(date))|> # convert date into ymd format
+  filter(date >= "2019-05-01")|> # select data starting from 2019-05-01 as shown in the original figure 
+  mutate(week = floor_date(date, unit = "week", week_start = 7))|> # week starts from Sunday
+  arrange()|>
+  group_by(name, week)|> # aggregate story count by week for each candidate
+  summarise(matched_stores = sum(matched_stories, na.rm = TRUE),
+            all_candidate_stories = sum(all_candidate_stories, na.rm = TRUE),
+            # calculate percentage of stories (online news) mentioned for each candidate
+            pct_stories = (matched_stores/all_candidate_stories)*100,
+            .groups = 'drop')|> 
+  arrange(desc(pct_stories))|> # arrange pct_stores in descending order
+  select(name, week, pct_stories)
+```
+
+```{r}
+# Need to see who has the second highest pct_stories after Joe Biden
+
+online_rank <- online_news|>
+  group_by(week)|> # aggregate the data by week
+  arrange(week, desc(pct_stories))|> # arrange by week and by pct_stories in descending order
+  mutate(rank = rank(-pct_stories, ties.method = "first"))|> # rank by pct_stories for each candidate
+  filter(rank %in% c(1, 2))|> # select the candidates with the top two highest pct_stories
+  summarise(biden_pct_stories = first(pct_stories), # Joe Biden's pct_stories
+            second_highest_pct_stories = last(pct_stories), # second highest pct_stories
+            # ratio of Biden's pct_stories/ second rank's pct_stories
+            times_pct_stories = (biden_pct_stories/second_highest_pct_stories),
+            .groups = 'drop') 
+```
+
+### Data Wrangling: cable data - all candidates
+
+```{r}
+cable_news <- cable_data|>
+  mutate(date = ymd(date))|> # convert date into date format
+  filter(date >= "2019-05-01")|> # select data starting from 2019-05-01
+  mutate(week = floor_date(date, unit = "week", week_start = 7))|> # week starts from Sunday
+  #arrange()|>
+  group_by(name, week)|> # aggregate clip count by week for each candidate
+  summarise(matched_clips = sum(matched_clips, na.rm = TRUE),
+            all_candidate_clips = sum(all_candidate_clips, na.rm = TRUE),
+            total_clips = sum(total_clips, na.rm = TRUE),
+            # calculte percentage of clips (cable news) mentioned for each candidate
+            pct_clips = (matched_clips/all_candidate_clips)*100,
+            .groups = 'drop')|>
+  arrange(desc(pct_clips))|> # arrange pct_clips in descening order
+  select(name, week, pct_clips)
+```
+
+```{r}
+# Need to see who has the second highest pct_clips after Joe Biden
+
+cable_rank <- cable_news|>
+  group_by(week)|> # aggregate the data by week
+  arrange(week, desc(pct_clips))|> # arrange by week and by pct_clips in descening order
+  mutate(rank = rank(-pct_clips, ties.method = "first"))|> # rank the candidate by pct_clips 
+  filter(rank %in% c(1, 2))|> # show only candidates with the top two highest pct_clips 
+  summarise(biden_pct_clips = first(pct_clips),
+            second_highest_pct_clips = last(pct_clips),
+            # ratios of Biden's pct_clips/ second rank's pct_clips
+            times_pct_clips = (biden_pct_clips/second_highest_pct_clips),
+            .groups = 'drop')
+```
+
+### Combine online_rank and cable_rank
+
+```{r}
+ratio_table <- online_rank|>
+  left_join(cable_rank, by = "week")|>
+  select(week, times_pct_stories, times_pct_clips)
+```
+
+## Figure 1. Biden's Ukraine-related media bump is fading
+
+### Description: Biden's share of media mentions on each medium relative to the next most-mentioned candidate each week from May 2019
+
+```{r}
+figure1 <- ratio_table|>
+  ggplot(aes(x=week))+
+  geom_line(aes(y=times_pct_stories, color = "Online News"), size = 1.2)+
+  geom_line(aes(y=times_pct_clips, color = "Cable News"), size = 1.2)+
+  labs(title = "Biden's share of media mentions on each medium relative to \nthe next most-mentioned candidate each week (2019)",
+       x = "Month",
+       y = "News Coverage")+
+  scale_color_manual(values = c("Online News" = "darkorange2",
+                                "Cable News" = "cadetblue3"))
+
+ggplotly(figure1)
+```
+
+## Table 1. Tulsi Gabbard was mentioned more on cable last week
+
+```{r}
+# on the week of 10/13/19
+# on the week of 10/20/19
+
+# Calculate the difference in cable news for each candidate
+cable_diff <- cable_news|>
+  filter(week %in% c("2019-10-13",  "2019-10-20"))|> # as stated in the original Table
+  mutate(pct_clips = round(pct_clips, 1))|> # round the data to one decimal place
+  select(name, week, pct_clips)|>
+  # convert data frame for calculating the difference
+  pivot_wider(names_from = "week", values_from = "pct_clips")|> 
+  mutate(diff = `2019-10-20` - `2019-10-13`) # calculate the difference in cable news mentioned
+
+# Calculate the difference in online news for each candidate
+online_diff <- online_news|>
+  filter(week %in% c("2019-10-13",  "2019-10-20"))|> # as stated in the original Table 1
+  mutate(pct_stories = round(pct_stories, 1))|> # round the data to one decimal place
+  select(name, week, pct_stories)|>
+  # convert data frame for calculating the difference
+  pivot_wider(names_from = week, values_from = pct_stories)|>
+  mutate(diff = `2019-10-20` - `2019-10-13`) # calculate difference in online news mentioned
+```
+
+```{r}
+# Combine the two datasets for the cable and the online news diff for each candidate
+table1 <- cable_diff|>
+  full_join(online_diff, by = "name")|> # join the cable difference and online difference datasets
+  rename("Candidate" = name,            # rename the column names
+         "10/13/19 Cable (%)" = `2019-10-13.x`,
+         "10/20/19 Cable (%)" = `2019-10-20.x`,
+         "Diff Cable (%)" = `diff.x`,
+         "10/13/19 Online (%)" = `2019-10-13.y`,
+         "10/20/19 Online (%)" = `2019-10-20.y`,
+         "Diff Online (%)" = `diff.y`)
+
+kable(table1)
+```

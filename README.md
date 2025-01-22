@@ -1,4 +1,4 @@
-# BST270-Individual_Project
+# BST270 Individual Project
 
 This repository contains my attempt to reproduce tables/figures from FiveThirtyEight's [The Media Frenzy Around Biden Is Fadingy](https://fivethirtyeight.com/features/the-media-frenzy-around-biden-is-fading/).
 
