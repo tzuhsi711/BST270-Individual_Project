@@ -14,15 +14,17 @@ knitr::opts_chunk$set(echo = TRUE)
 
 ### Introduction
 
-The purpose of this notebook is to meet the individual project component for the course BST270: Reproducible Data Science, taken Winter 2025.
+The purpose of this notebook is to meet the individual project criteria for the course BST270: Reproducible Data Science, taken Winter 2025.
 
 ### Motivation and Reproducibility
 
-The aim of this project is to accurately reproduce one figure and one table from FiveThirtyEight's [The Media Frenzy Around Biden Is Fading](https://fivethirtyeight.com/features/the-media-frenzy-around-biden-is-fading/). It utilizes datasets capturing media mentions from both online and cable news sources. The online news data, drawn from the Media Cloud database, includes U.S. Top Online News and U.S. Top Digital Native News, and is stored at `../data/online_weekly.csv`. Cable news data, collected through the GDELT Television API from the TV News Archive, can be found at `../data/cable_weekly.csv`.
+The aim of this project is to accurately reproduce one figure and one table from FiveThirtyEight's [The Media Frenzy Around Biden Is Fading](https://fivethirtyeight.com/features/the-media-frenzy-around-biden-is-fading/). It utilises datasets capturing media mentions from both online and cable news sources. The online news data, drawn from the Media Cloud database, includes U.S. Top Online News and U.S. Top Digital Native News, and is stored at `../data/online_weekly.csv`. Cable news data, collected through the GDELT Television API from the TV News Archive, can be found at `../data/cable_weekly.csv`.
 
 ### Set Up
 
 #### Install Required Packages and Load Libraries
+
+Firts, we install and load the necessary packages for data manipulation and visualisation. This includes `lubridate` for date conversions, `dplyr` and `tidyr` for data organization, `ggplot2` for static plotting, and `plotly` for interactive visualizations. We also use `knitr` for table generating.
 
 ```{r}
 #install.packages("dplyr")
@@ -32,22 +34,28 @@ The aim of this project is to accurately reproduce one figure and one table from
 #install.packages("plotly")
 #install.packages("knitr")
 
+# For data wrangling purposes:
 library(lubridate)
 library(dplyr)
-library(ggplot2)
 library(tidyr)
+
+# For generating the plot and the table
+library(ggplot2)
 library(plotly)
 library(knitr)
 ```
 
-### Import Data
+#### Import Data
+Next, we import the datasets for analysis.
 
 ```{r}
 online_data <- read.csv("../data/online_weekly.csv") # online news weekly data
 cable_data <- read.csv("../data/cable_weekly.csv") # cable news weekly data
 ```
 
-### Data Wrangling: online data - all candidate
+### Data Wrangling: Online News
+
+We start by processing `online_data` to compute the weekly percentage of online news mentions for each candidate starting from 2019-05-01. This start date aligns with the timeline presented in Figure 1 of the original article.
 
 ```{r}
 online_news <- online_data|>
@@ -65,6 +73,8 @@ online_news <- online_data|>
   select(name, week, pct_stories)
 ```
 
+We then determine the candidates with the highest and second-highest percentage of online news mentions each week, focusing particularly on Joe Biden, as he consistently ranks highest. From here, we can compute how many times higher Joe Biden's mentions are compared to the second highest candidate, which will be used for Figure 1.
+
 ```{r}
 # Need to see who has the second highest pct_stories after Joe Biden
 
@@ -80,7 +90,9 @@ online_rank <- online_news|>
             .groups = 'drop') 
 ```
 
-### Data Wrangling: cable data - all candidates
+### Data Wrangling: Cable News
+
+We then proceed to process `cable_data` to compute the weekly percentage of cable news mentions for each candidate starting from 2019-05-01. 
 
 ```{r}
 cable_news <- cable_data|>
@@ -99,6 +111,8 @@ cable_news <- cable_data|>
   select(name, week, pct_clips)
 ```
 
+Similar to the online news data, we determine the candidates with the highest and second-highest percentages of cable news mentions each week, again focusing on Joe Biden when calculating how much more frequently he is mentioned compared to the second-highest candidate. This calculation will also contribute to the visualisations for Figure 1.
+
 ```{r}
 # Need to see who has the second highest pct_clips after Joe Biden
 
@@ -114,7 +128,11 @@ cable_rank <- cable_news|>
             .groups = 'drop')
 ```
 
-### Combine online_rank and cable_rank
+#### Combine online_rank and cable_rank
+
+After computing the weekly mentions ratios for both online and cable news, we combine these results to create a comprehensive view of Biden's media coverage relative to the second-ranking candidate across both platforms
+
+After calculating the weekly mention ratios for both online and cable news, we combine these results to create a comprehensive view of Joe Biden's media coverage relative to the second-ranking candidate across both platforms. This step involves joining the datasets by week and selecting the relevant columns to form a consolidated table of ratios.
 
 ```{r}
 ratio_table <- online_rank|>
