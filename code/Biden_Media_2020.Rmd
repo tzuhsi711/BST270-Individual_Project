@@ -1,16 +1,28 @@
 ---
-title: "individaul_project"
-output: html_document
+title: "BST 270 Individual Project"
+subtitle: "Reproducible Data Science: Joe Biden's 2019 Media Coverage (FiveThirtyEight)"
+author: "Tzu-Hsi Jen"
 date: "2025-01-20"
+format: 
+  html: default
+  pdf: default
 ---
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-## Article: The Media Frenzy Around Biden Is Fading
+### Introduction
 
-### Install Required Packages and Load Libraries
+The purpose of this notebook is to meet the individual project component for the course BST270: Reproducible Data Science, taken Winter 2025.
+
+### Motivation and Reproducibility
+
+The aim of this project is to accurately reproduce one figure and one table from FiveThirtyEight's [The Media Frenzy Around Biden Is Fading](https://fivethirtyeight.com/features/the-media-frenzy-around-biden-is-fading/). It utilizes datasets capturing media mentions from both online and cable news sources. The online news data, drawn from the Media Cloud database, includes U.S. Top Online News and U.S. Top Digital Native News, and is stored at `../data/online_weekly.csv`. Cable news data, collected through the GDELT Television API from the TV News Archive, can be found at `../data/cable_weekly.csv`.
+
+### Set Up
+
+#### Install Required Packages and Load Libraries
 
 ```{r}
 #install.packages("dplyr")
