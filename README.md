@@ -10,7 +10,7 @@ This project is implemented using the R programming language. The R environment 
 
 ### Code Directory:
 
-A complete code reproduction attempt is available at ./code/Biden_Media_2020.qmd. This Quarto notebook can be compiled using RStudio, which supports direct integration with Quarto, or via the command line for those who prefer it. The notebook can be compiled into several formats including HTML, PDF, and Markdown. Compiled versions of the document are also stored in the ./code directory.
+A complete code reproduction attempt is available at ./code/Biden_Media_2020.Rmd. This Rmarkdown notebook can be compiled using RStudio, which supports direct integration with Quarto, or via the command line for those who prefer it. The notebook can be compiled into several formats including HTML and PDF. Compiled versions of the document are also stored in the ./code directory.
 
 ### Data Directory:
 
@@ -44,7 +44,7 @@ curl -o data/online_weekly.csv https://raw.githubusercontent.com/fivethirtyeight
 ### Getting Started
 
 1.  Clone the GitHub repository.
-2.  Open the Biden_Media_2020.qmd file in R Studio (pre-requisite: install R packages).
+2.  Open the Biden_Media_2020.Rmd file in R Studio (pre-requisite: install R packages).
 3.  Click "Preview" or "Run" to execute the notebook.
 
 ## Data
