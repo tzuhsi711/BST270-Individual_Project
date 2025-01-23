@@ -10,11 +10,11 @@ This project is implemented using the R programming language. The R environment 
 
 ### Code Directory:
 
-A complete code reproduction attempt is available at ./code/Biden_Media_2020.Rmd. This Rmarkdown notebook can be compiled using RStudio, which supports direct integration with Quarto. The notebook can be compiled into several formats including HTML and PDF. Compiled versions of the document are also stored in the ./code directory.
+A complete code reproduction attempt is available at `./code/Biden_Media_2020.Rmd`. This Rmarkdown notebook can be compiled using RStudio. The notebook can be compiled into several formats including HTML and PDF. Compiled versions of the document are also stored in the `./code` directory as `./code/Biden_Media_2020.html` and `./code/Biden_Media_2020.pdf`.
 
 ### Data Directory:
 
-All data files used in the analysis are available on [GitHub](https://github.com/fivethirtyeight/data/tree/master/hate-crimes) and are stored in the ./data directory.
+All data files used in the analysis are available on [GitHub](https://github.com/fivethirtyeight/data/tree/master/hate-crimes) and are stored in the `./data` directory.
 
 The following commands can also be utilised to obtain the data via command lines:
 
@@ -36,12 +36,12 @@ curl -o data/online_weekly.csv https://raw.githubusercontent.com/fivethirtyeight
 
 ### Original Figure and Table:
 
-Images of the original figures and tables referenced in the analysis are provided in the ./data directory for comparison.
+Images of the original figure and table referenced in the analysis are provided in the `./data` directory for comparison.
 
 ### Getting Started
 
 1.  Clone the GitHub repository.
-2.  Open the Biden_Media_2020.Rmd file in R Studio (pre-requisite: install `dplyr`, `lubridate`, `tidyr`,`ggplot2`, `plotly`, and `knitr` R packages).
+2.  Open the Biden_Media_2020.Rmd file in R Studio (pre-requisite: install `dplyr`, `lubridate`, `tidyr`,`ggplot2`, and `knitr` R packages).
 3.  Click "Preview" or "Run" to execute the notebook.
 
 ## Data
@@ -51,7 +51,7 @@ Images of the original figures and tables referenced in the analysis are provide
 `cable_weekly.csv` contains the mentions of currently declared [major candidates](https://fivethirtyeight.com/features/heres-how-were-defining-a-major-presidential-candidate/) for the 2020 Democratic primary since December 30, 2018 across CNN, Fox News, and MSNBC. The TV News Archive measures coverage by splitting daily news footage into 15-second clips and finding the clips that contain a mention of our search query. Our search queries are the full names of each candidate. All candidates are queried starting December 30, 2018, however candidates are removed from the query once they have dropped out from the race.
 
 | Column                       | Description                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         |
-|------------------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+|---------------------------|---------------------------------------------|
 | `date`                       | Start date for the week of coverage. A week of coverage spans from Sunday through Saturday. The cutoff for measuring coverage for any given day is midnight Eastern Standard Time. (Clock changes for Daylight Saving Time are ignored.)                                                                                                                                                                                                                                                                                            |
 | `name`                       | Candidate's name                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    |
 | `matched_clips`              | Number of 15-second clips that match `query`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        |
@@ -67,7 +67,7 @@ Data is collected using the [GDELT Television API](https://blog.gdeltproject.org
 `online_weekly.csv` contains the mentions of currently declared [major candidates](https://fivethirtyeight.com/features/heres-how-were-defining-a-major-presidential-candidate/) for the 2020 Democratic primary since December 30, 2018 across in online news stories from two collections in the [Media Cloud](https://mediacloud.org/) database ([U.S. Top Online News](https://sources.mediacloud.org/#/collections/58722749) and [U.S. Top Digital Native News](https://sources.mediacloud.org/#/collections/57078150)). All candidates are queried starting December 30, 2018, however candidates are removed from the query once they have dropped out from the race.
 
 | Column                         | Description                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 |
-|--------------------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+|---------------------------|---------------------------------------------|
 | `date`                         | Start date for the week of coverage. A week of coverage spans from Sunday through Saturday.                                                                                                                                                                                                                                                                                                                                                                                                                                 |
 | `name`                         | Candidate's name                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            |
 | `matched_stories`              | Number of stories that match `query`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        |
