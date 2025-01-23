@@ -211,3 +211,11 @@ table1 <- cable_diff|>
 
 kable(table1)
 ```
+
+## 6. Limitations and Biases
+
+The limitation of this project primary involves the lack of transparency of the data retrieval process and the difficulties in accessing the data sources. The project documentation mentions that the cable news data was sourced through the [GDELT Television API](https://blog.gdeltproject.org/gdelt-2-0-television-api-debuts/), but the specific process on how this API was utilised was not clearly detailed. Although it does not affect our process in data wrangling and reproducing the figure and the data, as the `.csv` files for the data was already provided on their GitHub, it would still impact our attempt in trying to understand how the data was generated and extracted.
+
+Furthermore, accessing online news data from [Media Cloud](https://mediacloud.org/) database (collected from [U.S. Top Online News](https://sources.mediacloud.org/#/collections/58722749) and [U.S. Top Digital Native News](https://sources.mediacloud.org/#/collections/57078150)) led to security and privacy warnings. Similarly, the warnings do not affect the purpose of this project, they hinder the process of verifying how the data was extracted in the original article.
+
+To improve this project, future documentation should provide clearer guidelines on data retrieval and ensure the data sources are secure and transparent about their data handling practices, thus enhancing the project's credibility and usability.
